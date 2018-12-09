@@ -120,23 +120,17 @@ public class TreeTest {
 		Queue<TreeNode> queue=new LinkedList<>();
 		queue.add(root);
 		int depth=0;
-		int levelcount=1;
-		int nextLevelcount=0;
 		while(queue.size()!=0) {
 			TreeNode node = queue.poll();
-			levelcount--;
-			if(node.left!=null) {
-				queue.add(node.left);
-			    nextLevelcount++;
-			}
-			if(node.right!=null) {
-				queue.add(node.right);
-				nextLevelcount++;
-			}
-			if(levelcount==0) {
-				levelcount=nextLevelcount;
-				depth++;
-				nextLevelcount=0;
+			depth++;
+			int levelcount = queue.size();
+			for (int i = 0; i < levelcount; i++) {
+				if(node.left!=null) {
+					queue.add(node.left);
+				}
+				if(node.right!=null) {
+					queue.add(node.right);
+				}
 			}
 		}
 		return depth;
