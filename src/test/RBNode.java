@@ -1,6 +1,6 @@
 package test;
 
-public class RBNode<Interger> {
+public class RBNode<Integer> {
 
 	boolean color;
 	int key;

@@ -6,6 +6,10 @@ public class RBTreeTest {
 	private static boolean RED=false;
 	private static boolean BLACK=true;
 	
+	public RBNode<Integer> parentof(RBNode<Integer> node){
+		return node!=null?node.parent:null;
+	}
+	
 	public boolean isRed(RBNode<Integer> node) { //判断节点的颜色
 		return (node != null)&&(node.color == RED)? true : false;
 	}
@@ -99,6 +103,50 @@ public class RBTreeTest {
 
 	private void insertRBtree(RBNode<Integer> node) {
 		// TODO Auto-generated method stub
-		
+		RBNode<Integer> parent;
+		RBNode<Integer> gparent;
+		while((parent=parentof(node))!=null && isRed(node)) {
+			 gparent = parentof(parent);
+			 if(parent==gparent.left) {
+				 RBNode<Integer> uncle = gparent.right;
+				 if(uncle!=null && isRed(uncle)) {
+					 setBlack(parent);
+					 setBlack(uncle);
+					 setRed(gparent);
+					 node=gparent;
+					 continue;
+				 }
+				 if(node==parent.right) {
+					 leftRotate(parent);
+					 RBNode<Integer> tmp=parent;
+					 parent=node;
+					 node=tmp;
+				 }
+				 
+				 setBlack(parent);
+				 setRed(gparent);
+				 rightRotate(gparent);
+			 }else {
+				 RBNode<Integer> uncle = gparent.left;
+				 if(uncle!=null && isRed(uncle)) {
+					 setBlack(parent);
+					 setBlack(uncle);
+					 setRed(gparent);
+					 node=gparent;
+					 continue;
+				 }
+				 if(node==parent.left) {
+					 rightRotate(parent);
+					 RBNode<Integer> tmp=parent;
+					 parent=node;
+					 node=tmp;
+				 }
+				 
+				 setBlack(parent);
+				 setRed(gparent);
+				 leftRotate(gparent);
+			 }
+		}
+		setBlack(root);
 	}
 }
