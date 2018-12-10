@@ -121,10 +121,10 @@ public class TreeTest {
 		queue.add(root);
 		int depth=0;
 		while(queue.size()!=0) {
-			TreeNode node = queue.poll();
-			depth++;
 			int levelcount = queue.size();
+			depth++;
 			for (int i = 0; i < levelcount; i++) {
+				TreeNode node = queue.poll();
 				if(node.left!=null) {
 					queue.add(node.left);
 				}
@@ -147,11 +147,12 @@ public class TreeTest {
 		while(queue.size()!=0) {
 			level++;
 			levelcount=queue.size();
+			
 			if(level==k) {
 				break;
 			}
-			int i=0;
-			while(i<levelcount) {
+			
+			for(int i=0;i<levelcount;i++) {
 				TreeNode node = queue.poll();
 				if(node.left!=null) {
 					queue.add(node.left);
@@ -159,8 +160,8 @@ public class TreeTest {
 				if(node.right!=null) {
 					queue.add(node.right);
 				}
-				i++;
 			}
+			
 		}
 		if(levelcount==k) {
 			return levelcount;
@@ -182,8 +183,7 @@ public class TreeTest {
 			if(level==k) {
 				break;
 			}
-			int i=0;
-			while(i<levelcount) {
+			for(int i=0;i<levelcount;i++) {
 				TreeNode node = queue.poll();
 				if(node.left!=null) {
 					queue.add(node.left);
@@ -286,6 +286,7 @@ public class TreeTest {
 				stack.push(root.left);
 				root=root.left;
 			}
+			
 			if(stack.size()!=0) {
 				 root = stack.pop();
 				 if(pre!=null && pre.val<root.val) {
@@ -324,6 +325,5 @@ public class TreeTest {
 		}
 		return true;
 	}
-	
 	
 }
