@@ -1,5 +1,6 @@
 package test2;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -7,6 +8,7 @@ import java.util.Queue;
 import java.util.Stack;
 
 import test.ListNode;
+import test.ListNode2;
 import test.Point;
 import test.TreeNode;
 
@@ -371,6 +373,124 @@ public class Test {
 			pre=pre.next;
 		}
 	}
+	
+	//根结点到叶子总和
+	public int add(TreeNode root) {
+		Queue<TreeNode> queue = new LinkedList<>();
+		HashMap<TreeNode,TreeNode> hashMap = new HashMap<>();
+		ArrayList<TreeNode> list = new ArrayList<>();
+		queue.add(root);
+		hashMap.put(root, root);
+		while(queue.size()!=0) {
+			TreeNode node = queue.poll();
+			if(node.left!=null) {
+				hashMap.put(node.left, node);
+			}
+			if(node.right!=null) {
+				hashMap.put(node.right, node);
+			}
+			if(node.left==null && node.right==null) {
+				list.add(node);
+			}
+		}
+		int i=0;
+		int sum=0;
+		while(i<list.size()) {
+			TreeNode node = list.get(i);
+			int nodeValue=node.val;
+			int k=1;
+			while(node!=root) {
+				 nodeValue=nodeValue*k;
+				 sum=sum+nodeValue;
+				 node = hashMap.get(node);
+				 k=k*10;
+			}
+		}
+		
+		return sum;
+	}
+	
+	//给出链表，使得每个节点包含一个附加的随机指针，该指针可以指向列表中的任何节点或为空。返回列表的深层副本。
+    public ListNode2 get(ListNode2 head) {
+    	ListNode2 current=head;
+    	//复制节点
+    	while(current!=null) {
+    		ListNode2 node = new ListNode2(current.val);
+    		node.next=current.next;
+    		current.next=node;
+    		current=current.next.next;
+    	}
+    	current=head;
+    	//随机节点
+    	while(current.next!=null) {
+    		if(current.random!=null) {
+    			current.next.random=current.random.next;
+    		}
+    		current=current.next.next;
+    	}
+    	//分离出新节点
+    	ListNode2 pre=head.next;
+    	while(head.next!=null) {
+    		ListNode2 newNode=head.next;
+    		head.next=newNode.next;
+    		if(newNode.next!=null) {
+    			newNode.next=newNode.next.next;
+    		}
+    		head=head.next;
+    	}
+    	return pre;
+    }
+
+    //数组中出现超过三次的数字也可以是多次出现的数字
+    public int getSinglenumber(int[] array) {
+    	if(array.length==0 || array==null) {
+    		return -1;
+    	}
+    	int result=0;
+    	//int为4个字节，那么一共有4*8=32位
+    	for(int i=0;i<32;i++) {
+    		//保存每一位求和值
+    		int sum=0;
+    		for(int j=0;j<array.length;j++) {
+    			//累加所有数字上第i位上的数字
+    			sum=sum+(array[j]>>i);
+    		}
+    		//取余得到第i位上的数字，之后更新result
+    		result=result | ((sum % 3)<<i);
+    	}
+    	return result;
+    }
+    
+	//加油站问题贪婪算法
+	public int cancomplete(int[] gas, int[] cost) {
+		for (int i = 0; i < gas.length; i++) {
+			//计算节点后面的累计汽油
+			int number = 0;
+			for (int j = i; j < gas.length; j++) {
+				number = number + gas[j] - cost[j];
+				if (number < 0) {
+					break;
+				}
+			}
+			if (i==0 && number>=0) {
+				return 0;
+			}
+			//计算节点前面的累计汽油
+			if (i>0 && number>=0) {
+				for(int j=0;j<i;j++) {
+					number=number+gas[j]-cost[j];
+					if(number<0) {
+						return -1;
+					}
+				}
+				if(number>=0) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+	
 	public static void main(String[] args) {
 		ListNode listNode1 = new ListNode(1);
 		ListNode listNode2 = new ListNode(2);
@@ -378,16 +498,19 @@ public class Test {
 		ListNode listNode4 = new ListNode(4);
 		ListNode listNode5 = new ListNode(5);
 		ListNode listNode6 = new ListNode(6);
+		int[] gas= {6,0,1,3,2};
+		int[] cost= {4,5,2,5,5};
 		listNode1.next=listNode2;
 		listNode2.next=listNode3;
 		listNode3.next=listNode4;
 		listNode4.next=listNode5;
 		listNode5.next=listNode6;
 		Test test = new Test();
-		test.reverseLinkedlist(listNode1);
+//		test.reverseLinkedlist(listNode1);
 //		System.out.println(test.add(-1, -2));
-		test.insertionSortList(listNode1);
-		test.print(4);
+//		test.insertionSortList(listNode1);
+//		test.print(4);
+		System.out.println(test.cancomplete(gas, cost));
 	}
 	
 }
